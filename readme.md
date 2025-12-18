@@ -20,7 +20,6 @@ A full-featured workspace application that helps teams manage projects, chat in 
 - 💬 **Live Messaging** - Real-time chat for teams and individuals
 - 📁 **File Sharing** - Upload and organize project documents
 - 📅 **Timeline Views** - Kanban boards and calendar integration
-- 💳 **Subscription Plans** - Flexible pricing with Stripe payments
 
 ## Built With
 
