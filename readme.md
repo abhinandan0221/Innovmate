@@ -22,14 +22,6 @@ A full-featured workspace application that helps teams manage projects, chat in 
 - 📅 **Timeline Views** - Kanban boards and calendar integration
 - 💳 **Subscription Plans** - Flexible pricing with Stripe payments
 
-## Pricing Structure
-
-| Tier | Projects | Members | Storage | Cost |
-|------|----------|---------|---------|------|
-| Starter | 5 | 4 | 100MB | Free |
-| Pro | 100 | 15 | 10GB | $29/mo |
-| Enterprise | ∞ | ∞ | 100GB | $79/mo |
-
 ## Built With
 
 **Client Side:** Next.js 15, TailwindCSS, NextAuth.js, React Hook Form  
