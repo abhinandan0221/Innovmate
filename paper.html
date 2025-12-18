@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Skills MCQ Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .header {
+      background: #4a00e0;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .quiz-body {
+      padding: 30px;
+    }
+    .question {
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .options {
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      padding: 12px 15px;
+      margin: 8px 0;
+      background: #f8f9fa;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    label:hover {
+      background: #e9ecef;
+    }
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+    button {
+      background: #4a00e0;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #3a00b0;
+    }
+    .result {
+      text-align: center;
+      font-size: 1.5em;
+      padding: 40px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Developer Skills Quiz</h1>
+      <p>Test your knowledge across 5 random topics!</p>
+    </div>
+
+    <div class="quiz-body">
+      <div id="quiz">
+        <div class="question" id="question-text"></div>
+        <div class="options" id="options"></div>
+        <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+      </div>
+
+      <div id="result" class="result hidden">
+        <h2>Quiz Complete!</h2>
+        <p id="score-text"></p>
+        <button onclick="location.reload()">Take Quiz Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const devSkills = [
+      "Data Structures & Algorithms",
+      "Database Management (SQL/PostgreSQL)",
+      "Web Development (HTML, CSS, JavaScript)",
+      "Backend Development (Node.js, Django, Flask)",
+      "Version Control (Git/GitHub)",
+      "Object-Oriented Programming (Java, C++)",
+      "API Design & Integration (REST, GraphQL)",
+      "Cloud Computing (AWS, Azure, GCP)",
+      "DevOps & CI/CD",
+      "Machine Learning & Data Science"
+    ];
+
+    // Predefined MCQs (2 per topic)
+    const mcqDatabase = {
+      "Data Structures & Algorithms": [
+        { q: "What is the time complexity of binary search on a sorted array?", o: ["O(n)", "O(log n)", "O(n²)", "O(1)"], a: 1 },
+        { q: "Which data structure uses LIFO principle?", o: ["Queue", "Stack", "Linked List", "Tree"], a: 1 }
+      ],
+      "Database Management (SQL/PostgreSQL)": [
+        { q: "What does SQL stand for?", o: ["Structured Query Language", "Simple Query Language", "Standard Query Language", "Sequential Query Language"], a: 0 },
+        { q: "Which SQL clause is used to filter rows after grouping?", o: ["WHERE", "GROUP BY", "HAVING", "ORDER BY"], a: 2 }
+      ],
+      "Web Development (HTML, CSS, JavaScript)": [
+        { q: "Which is used to style web pages?", o: ["HTML", "JavaScript", "CSS", "Python"], a: 2 },
+        { q: "How do you create a function in JavaScript?", o: ["function = myFunc()", "function myFunc()", "func myFunc()", "create function myFunc()"], a: 1 }
+      ],
+      "Backend Development (Node.js, Django, Flask)": [
+        { q: "Which of these is a Python web framework?", o: ["Express", "Django", "Laravel", "Spring"], a: 1 },
+        { q: "What is Express.js primarily used for?", o: ["Frontend styling", "Database management", "Node.js web applications", "Mobile apps"], a: 2 }
+      ],
+      "Version Control (Git/GitHub)": [
+        { q: "What command creates a new branch in Git?", o: ["git branch new-branch", "git checkout -b new-branch", "git new branch", "git create branch"], a: 1 },
+        { q: "What does 'git merge' do?", o: ["Deletes a branch", "Combines branches", "Creates a new repository", "Undoes changes"], a: 1 }
+      ],
+      "Object-Oriented Programming (Java, C++)": [
+        { q: "Which pillar of OOP is achieved by 'private' keyword?", o: ["Inheritance", "Polymorphism", "Encapsulation", "Abstraction"], a: 2 },
+        { q: "What is the parent class called in Java?", o: ["Child class", "Base class", "Superclass", "Derived class"], a: 2 }
+      ],
+      "API Design & Integration (REST, GraphQL)": [
+        { q: "Which HTTP method is used to update a resource in REST?", o: ["GET", "POST", "PUT/PATCH", "DELETE"], a: 2 },
+        { q: "What is a key advantage of GraphQL over REST?", o: ["Multiple endpoints", "Over-fetching", "Single endpoint with flexible queries", "Caching"], a: 2 }
+      ],
+      "Cloud Computing (AWS, Azure, GCP)": [
+        { q: "What does AWS EC2 stand for?", o: ["Elastic Compute Cloud", "Extended Cloud Computing", "Elastic Container Cloud", "Enterprise Cloud 2"], a: 0 },
+        { q: "Which is a serverless computing service?", o: ["EC2", "AWS Lambda", "S3", "RDS"], a: 1 }
+      ],
+      "DevOps & CI/CD": [
+        { q: "What does CI stand for in DevOps?", o: ["Continuous Integration", "Code Inspection", "Cloud Infrastructure", "Container Instance"], a: 0 },
+        { q: "Which tool is commonly used for CI/CD?", o: ["Photoshop", "Jenkins", "Excel", "Notepad"], a: 1 }
+      ],
+      "Machine Learning & Data Science": [
+        { q: "Which library is popularly used for ML in Python?", o: ["Pandas", "Scikit-learn", "Flask", "React"], a: 1 },
+        { q: "What is 'overfitting' in ML?", o: ["Model too simple", "Model performs well on training but poor on new data", "Model has no errors", "Model uses too few features"], a: 1 }
+      ]
+    };
+
+    let selectedTopics = [];
+    let questions = [];
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+      // Randomly select 5 topics
+      selectedTopics = [...devSkills].sort(() => 0.5 - Math.random()).slice(0, 5);
+      
+      // Pick 2 questions from each selected topic
+      questions = [];
+      selectedTopics.forEach(topic => {
+        const topicQuestions = mcqDatabase[topic];
+        const shuffled = topicQuestions.sort(() => 0.5 - Math.random());
+        questions.push(...shuffled);
+      });
+      
+      // Shuffle all 10 questions
+      questions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+      
+      currentQuestion = 0;
+      score = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        showResult();
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      document.getElementById("question-text").innerHTML = 
+        `<strong>Question ${currentQuestion + 1}/10</strong><br>${q.q}<br><small>Topic: ${selectedTopics[Math.floor(currentQuestion / 2)]}</small>`;
+      
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      
+      q.o.forEach((option, i) => {
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="radio" name="q${currentQuestion}" value="${i}">
+          ${option}
+        `;
+        optionsDiv.appendChild(label);
+      });
+
+      document.getElementById("next-btn").textContent = currentQuestion === 9 ? "Finish Quiz" : "Next Question";
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+      if (!selected) {
+        alert("Please select an answer!");
+        return;
+      }
+
+      if (parseInt(selected.value) === questions[currentQuestion].a) {
+        score++;
+      }
+
+      currentQuestion++;
+      showQuestion();
+    }
+
+    function showResult() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("score-text").innerHTML = 
+        `Your Score: <strong>${score}/10</strong><br><br>
+        ${score >= 8 ? "Excellent! 🚀" : score >= 6 ? "Good job! 👏" : "Keep learning! 💪"}`;
+    }
+
+    // Start quiz when page loads
+    window.onload = startQuiz;
+  </script>
+</body>
+</html>
